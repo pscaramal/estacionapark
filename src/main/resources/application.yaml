@@ -11,3 +11,8 @@ spring:
 
 flyway:
   enabled: true
+
+garage:
+  client:
+    base:
+      url: http://localhost:3000

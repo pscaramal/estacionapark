@@ -16,13 +16,10 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
 
     volumes:
-      - mysql_data:${VOLUME}
+      - ${VOLUME}:/var/lib/mysql
 
   garage-sim:
     image: cfontes0estapar/garage-sim:1.0.0
     container_name: garage-sim
     network_mode: host
     restart: unless-stopped
-
-volumes:
-  mysql_data:
