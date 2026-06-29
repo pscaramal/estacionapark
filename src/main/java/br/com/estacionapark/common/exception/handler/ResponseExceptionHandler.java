@@ -100,4 +100,19 @@ public class ResponseExceptionHandler {
 
         return ResponseEntity.status(400).body(error);
     }
+
+    @ExceptionHandler(CustomSQLException.class)
+    public ResponseEntity<ErrorResponse> handleCustomSQLException(CustomSQLException ex,
+                                                                       HttpServletRequest request) {
+
+        ErrorResponse error = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(500).body(error);
+    }
 }
