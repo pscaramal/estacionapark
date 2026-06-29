@@ -9,7 +9,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Repository
@@ -61,7 +64,17 @@ public class ParkingSessionRepository {
                   status = ?
             WHERE id = ?
             """;
-
+    private static final String CALCULATE_REVENUE = """
+                SELECT
+                    COALESCE(SUM(ps.amount), 0)
+                FROM parking_session ps
+                INNER JOIN sector s
+                    ON s.id = ps.sector_id
+                WHERE
+                    s.code = ?
+                AND DATE(ps.exit_time) = ?
+                AND ps.status = ?
+            """;
     public ParkingSessionRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -103,5 +116,14 @@ public class ParkingSessionRepository {
                 session.status().name(),
                 session.id().toString()
         );
+    }
+
+    public BigDecimal calculateRevenue(LocalDate date, String sector) {
+        return jdbcTemplate.queryForObject(
+                CALCULATE_REVENUE,
+                BigDecimal.class,
+                sector,
+                Date.valueOf(date),
+                ParkingSessionStatus.FINISH.name());
     }
 }
