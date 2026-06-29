@@ -1,7 +1,6 @@
 package br.com.estacionapark.common.exception.handler;
 
-import br.com.estacionapark.common.exception.InvalidParkingEventException;
-import br.com.estacionapark.common.exception.ParkingLotFullException;
+import br.com.estacionapark.common.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,5 +54,50 @@ public class ResponseExceptionHandler {
         );
 
         return ResponseEntity.status(409).body(error);
+    }
+
+    @ExceptionHandler(ParkingSessionNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleParkingSessionNotFoundException(ParkingSessionNotFoundException ex,
+                                                                               HttpServletRequest request) {
+
+        ErrorResponse error = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(400).body(error);
+    }
+
+    @ExceptionHandler(SpotNotAvailableException.class)
+    public ResponseEntity<ErrorResponse> handleSpotNotAvailableException(SpotNotAvailableException ex,
+                                                                         HttpServletRequest request) {
+
+        ErrorResponse error = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(400).body(error);
+    }
+
+    @ExceptionHandler(SectorNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleSectorNotFoundException(SectorNotFoundException ex,
+                                                                         HttpServletRequest request) {
+
+        ErrorResponse error = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(400).body(error);
     }
 }

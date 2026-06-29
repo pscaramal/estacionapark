@@ -51,6 +51,10 @@ public class Spot {
         return new SpotBuilder();
     }
 
+    public boolean isOcuppied() {
+        return this.occupied;
+    }
+
     public static class SpotBuilder {
         private Long id;
         private Long sectorId;

@@ -2,9 +2,9 @@ package br.com.estacionapark.parking.handler;
 
 import br.com.estacionapark.api.request.EventType;
 import br.com.estacionapark.common.exception.ParkingLotFullException;
-import br.com.estacionapark.parking.ParkingEvent;
+import br.com.estacionapark.parking.domain.ParkingEvent;
 import br.com.estacionapark.parking.ParkingEventHandler;
-import br.com.estacionapark.parking.ParkingSession;
+import br.com.estacionapark.parking.domain.ParkingSession;
 import br.com.estacionapark.parking.repository.ParkingEventRepository;
 import br.com.estacionapark.parking.repository.ParkingSessionRepository;
 import br.com.estacionapark.spot.SpotRepository;
@@ -50,6 +50,6 @@ public class EntryEventHandler implements ParkingEventHandler {
 
         parkingSessionRepository.save(session);
 
-        parkingEventRepository.saveEntryEvent(sessionId, event);
+        parkingEventRepository.save(sessionId, event);
     }
 }

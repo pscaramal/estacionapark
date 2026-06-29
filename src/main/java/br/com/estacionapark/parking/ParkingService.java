@@ -1,6 +1,7 @@
 package br.com.estacionapark.parking;
 
 import br.com.estacionapark.api.request.EventType;
+import br.com.estacionapark.parking.domain.ParkingEvent;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

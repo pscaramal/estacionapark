@@ -1,8 +1,10 @@
 package br.com.estacionapark.parking.repository;
 
-import br.com.estacionapark.parking.ParkingSession;
-import br.com.estacionapark.parking.ParkingSessionStatus;
+import br.com.estacionapark.parking.domain.ParkingSession;
+import br.com.estacionapark.parking.domain.ParkingSessionStatus;
 import br.com.estacionapark.parking.repository.rowmapper.ParkingSessionRowMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -12,6 +14,8 @@ import java.util.Optional;
 
 @Repository
 public class ParkingSessionRepository {
+
+    private static final Logger logger = LoggerFactory.getLogger(ParkingSessionRepository.class);
 
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<ParkingSession> rowMapper = new ParkingSessionRowMapper();
@@ -47,6 +51,16 @@ public class ParkingSessionRepository {
                     license_plate = ?
                 AND status = ?
             """;
+    private static final String UPDATE_PARKING_SESSION_QUERY = """
+            UPDATE parking_session
+              SET sector_id = ?,
+                  spot_id = ?,
+                  parked_duration = ?,
+                  exit_time = ?,
+                  amount = ?,
+                  status = ?
+            WHERE id = ?
+            """;
 
     public ParkingSessionRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -55,24 +69,39 @@ public class ParkingSessionRepository {
     public void save(ParkingSession session) {
 
         jdbcTemplate.update(INSERT_PARKING_SESSION_QUERY,
-                session.getId().toString(),
-                session.getLicensePlate(),
-                session.getSectorId(),
-                session.getSpotId(),
-                session.getEntryTime() != null? Timestamp.valueOf(session.getEntryTime()) : null,
-                session.getParkedDuration(),
-                session.getExitTime() != null? Timestamp.valueOf(session.getEntryTime()) : null,
-                session.getAmount(),
-                session.getStatus().name());
+                session.id().toString(),
+                session.licensePlate(),
+                session.sectorId(),
+                session.spotId(),
+                session.entryTime() != null? Timestamp.valueOf(session.entryTime()) : null,
+                session.parkedDuration(),
+                session.exitTime() != null? Timestamp.valueOf(session.exitTime()) : null,
+                session.amount(),
+                session.status().name());
     }
 
-    public Optional<ParkingSession> findOpenByLicensePlate(String licensePlate) {
+    public Optional<ParkingSession> findSessionByLicensePlateAndStatus(String licensePlate, ParkingSessionStatus status) {
         return jdbcTemplate.query(
                         FIND_PARKING_SESSION_QUERY,
                         rowMapper,
                         licensePlate,
-                        ParkingSessionStatus.OPEN.name())
+                        status.name())
                 .stream()
                 .findFirst();
+    }
+
+    public void update(ParkingSession session) {
+        logger.info("updating parking session, session={}", session);
+
+        jdbcTemplate.update(
+                UPDATE_PARKING_SESSION_QUERY,
+                session.sectorId(),
+                session.spotId(),
+                session.parkedDuration(),
+                session.exitTime(),
+                session.amount(),
+                session.status().name(),
+                session.id().toString()
+        );
     }
 }

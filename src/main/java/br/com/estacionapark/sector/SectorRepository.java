@@ -8,11 +8,13 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Time;
+import java.util.Optional;
 
 @Repository
 public class SectorRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SectorRowMapper sectorRowMapper = new SectorRowMapper();
 
     private static final String INSERT_SECTOR_QUERY =
             """
@@ -25,6 +27,18 @@ public class SectorRepository {
                             duration_limit_minutes)
                     VALUES (?, ?, ?, ?, ?, ?)
                     """;
+
+    private static final String SELECT_SECTOR_QUERY = """
+            SELECT id,
+                   code,
+                   base_price,
+                   max_capacity,
+                   open_hour,
+                   close_hour,
+                   duration_limit_minutes
+            FROM sector
+            WHERE id = ?
+            """;
 
     public SectorRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -52,5 +66,14 @@ public class SectorRepository {
         }, keyHolder);
 
         return keyHolder.getKey().longValue();
+    }
+
+    public Optional<Sector> findById(Long sectorId) {
+        return jdbcTemplate.query(
+                        SELECT_SECTOR_QUERY,
+                        sectorRowMapper,
+                        sectorId)
+                .stream()
+                .findFirst();
     }
 }

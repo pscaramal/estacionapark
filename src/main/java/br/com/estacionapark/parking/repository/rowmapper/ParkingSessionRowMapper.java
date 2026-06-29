@@ -1,7 +1,7 @@
 package br.com.estacionapark.parking.repository.rowmapper;
 
-import br.com.estacionapark.parking.ParkingSession;
-import br.com.estacionapark.parking.ParkingSessionStatus;
+import br.com.estacionapark.parking.domain.ParkingSession;
+import br.com.estacionapark.parking.domain.ParkingSessionStatus;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

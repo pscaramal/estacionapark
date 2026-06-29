@@ -1,4 +1,4 @@
-package br.com.estacionapark.parking;
+package br.com.estacionapark.parking.domain;
 
 import br.com.estacionapark.api.request.EventType;
 import br.com.estacionapark.api.request.ParkingEventRequest;
@@ -37,6 +37,25 @@ public class ParkingEvent {
 
     public LocalDateTime getEntryTime() {
         return entryTime;
+    }
+
+    public Coordinate getCoordinate() {
+        return coordinate;
+    }
+
+    public LocalDateTime getExitTime() {
+        return exitTime;
+    }
+
+    @Override
+    public String toString() {
+        return "ParkingEvent{" +
+                "licensePlate='" + licensePlate + '\'' +
+                ", type=" + type +
+                ", entryTime=" + entryTime +
+                ", exitTime=" + exitTime +
+                ", coordinate=" + coordinate +
+                '}';
     }
 
     public static ParkingEvent from(ParkingEventRequest request) {

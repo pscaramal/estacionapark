@@ -1,4 +1,4 @@
-package br.com.estacionapark.parking;
+package br.com.estacionapark.parking.domain;
 
 public record Coordinate(
         Double latitude,

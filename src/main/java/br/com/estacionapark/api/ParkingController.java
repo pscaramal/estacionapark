@@ -1,7 +1,7 @@
 package br.com.estacionapark.api;
 
 import br.com.estacionapark.api.request.ParkingEventRequest;
-import br.com.estacionapark.parking.ParkingEvent;
+import br.com.estacionapark.parking.domain.ParkingEvent;
 import br.com.estacionapark.parking.ParkingService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
